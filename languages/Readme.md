@@ -2,4 +2,4 @@
 {translation-domain}-{localisation}.po
 
 ex:
-zume-public-heatmaps-fr_FR.po
+ftt-public-heatmaps-fr_FR.po

@@ -2,22 +2,22 @@
 if ( ! defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly
 
 /**
- * Class Zume_Public_Heatmaps_Menu
+ * Class Zume_FTT_Public_Heatmaps_Menu
  */
-class Zume_Public_Heatmaps_Menu {
+class Zume_FTT_Public_Heatmaps_Menu {
 
-    public $token = 'zume_public_heatmaps';
+    public $token = 'zume_ftt_public_heatmaps';
 
     private static $_instance = null;
 
     /**
-     * Zume_Public_Heatmaps_Menu Instance
+     * Zume_FTT_Public_Heatmaps_Menu Instance
      *
-     * Ensures only one instance of Zume_Public_Heatmaps_Menu is loaded or can be loaded.
+     * Ensures only one instance of Zume_FTT_Public_Heatmaps_Menu is loaded or can be loaded.
      *
      * @since 0.1.0
      * @static
-     * @return Zume_Public_Heatmaps_Menu instance
+     * @return Zume_FTT_Public_Heatmaps_Menu instance
      */
     public static function instance() {
         if ( is_null( self::$_instance ) ) {
@@ -72,7 +72,7 @@ class Zume_Public_Heatmaps_Menu {
 
         ?>
         <div class="wrap">
-            <h2>Zume Map/Report</h2>
+            <h2>FTT Map</h2>
             <h2 class="nav-tab-wrapper">
                 <a href="<?php echo esc_attr( $link ) . 'general' ?>"
                    class="nav-tab <?php echo esc_html( ( $tab == 'general' || !isset( $tab ) ) ? 'nav-tab-active' : '' ); ?>">General</a>
@@ -81,7 +81,7 @@ class Zume_Public_Heatmaps_Menu {
             <?php
             switch ($tab) {
                 case "general":
-                    $object = new Zume_Public_Heatmaps_Tab_General();
+                    $object = new Zume_FTT_Public_Heatmaps_Tab_General();
                     $object->content();
                     break;
 
@@ -95,17 +95,17 @@ class Zume_Public_Heatmaps_Menu {
         <?php
     }
 }
-Zume_Public_Heatmaps_Menu::instance();
+Zume_FTT_Public_Heatmaps_Menu::instance();
 
 /**
- * Class Zume_Public_Heatmaps_Tab_General
+ * Class Zume_FTT_Public_Heatmaps_Tab_General
  */
-class Zume_Public_Heatmaps_Tab_General {
+class Zume_FTT_Public_Heatmaps_Tab_General {
     public function content() {
         ?>
         <div class="wrap">
             <div id="poststuff">
-                <div id="post-body" class="metabox-holder columns-2">
+                <div id="post-body" class="metabox-holder columns-1">
                     <div id="post-body-content">
                         <!-- Main Column -->
 
@@ -117,7 +117,6 @@ class Zume_Public_Heatmaps_Tab_General {
                     <div id="postbox-container-1" class="postbox-container">
                         <!-- Right Column -->
 
-                        <?php $this->right_column() ?>
 
                         <!-- End Right Column -->
                     </div><!-- postbox-container 1 -->
@@ -143,49 +142,10 @@ class Zume_Public_Heatmaps_Tab_General {
             <tbody>
             <tr>
                 <td>
-                   Reporter Manager<br>
-                    <a href="<?php echo esc_url( site_url() ) ?>/zume_app/reporter_manager"><?php echo esc_url( site_url() ) ?>/zume_app/reporter_manager</a>
+                   FTT Public Heatmap (1000)<br>
+                    <a href="<?php echo esc_url( site_url() ) ?>/zume_app/heatmap_1000"><?php echo esc_url( site_url() ) ?>/zume_app/heatmap_1000</a>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    Last 100 Hours<br>
-                    <a href="<?php echo esc_url( site_url() ) ?>/zume_app/last100_hours"><?php echo esc_url( site_url() ) ?>/zume_app/last100_hours</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Practitioners Heatmap<br>
-                    <a href="<?php echo esc_url( site_url() ) ?>/zume_app/heatmap_practitioners"><?php echo esc_url( site_url() ) ?>/zume_app/heatmap_practitioners</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Church Heatmap<br>
-                    <a href="<?php echo esc_url( site_url() ) ?>/zume_app/heatmap_churches"><?php echo esc_url( site_url() ) ?>/zume_app/heatmap_churches</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Trainings Cluster Map<br>
-                    <a href="<?php echo esc_url( site_url() ) ?>/zume_app/cluster_trainings"><?php echo esc_url( site_url() ) ?>/zume_app/cluster_trainings</a>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Streams Cluster Map<br>
-                    <a href="<?php echo esc_url( site_url() ) ?>/zume_app/cluster_streams"><?php echo esc_url( site_url() ) ?>/zume_app/cluster_streams</a>
-                </td>
-            </tr>
-
-            <!-- Zume -->
-            <tr>
-                <td>
-                    Network Activities Map<br>
-                    <a href="<?php echo esc_url( site_url() ) ?>/zume_app/heatmap_activity"><?php echo esc_url( site_url() ) ?>/zume_app/heatmap_activity</a>
-                </td>
-            </tr>
-
             </tbody>
         </table>
         <br>
@@ -193,34 +153,12 @@ class Zume_Public_Heatmaps_Tab_General {
         </form>
         <?php
     }
-
-    public function right_column() {
-        ?>
-        <!-- Box -->
-        <table class="widefat striped">
-            <thead>
-                <tr>
-                    <th>Information</th>
-                </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    Content
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <br>
-        <!-- End Box -->
-        <?php
-    }
 }
 
 /**
- * Class Zume_Public_Heatmaps_Tab_General
+ * Class Zume_FTT_Public_Heatmaps_Tab_General
  */
-class Zume_Public_Heatmaps_Tab_ShortCodes {
+class Zume_FTT_Public_Heatmaps_Tab_ShortCodes {
     public function content() {
         ?>
         <div class="wrap">

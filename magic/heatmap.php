@@ -3897,8 +3897,8 @@ class Zume_App_Heatmap {
 /**
  * REGISTER ACTIONS (AND CATEGORIES)
  */
-add_action( 'dt_network_dashboard_register_actions', 'dt_network_dashboard_register_action_zume_public_keys', 30, 1 );
-function dt_network_dashboard_register_action_zume_public_keys( $actions ){
+add_action( 'dt_network_dashboard_register_actions', 'dt_network_dashboard_register_action_zume_ftt_public_keys', 30, 1 );
+function dt_network_dashboard_register_action_zume_ftt_public_keys( $actions ){
 
     $actions['studying_1'] = [
         'key' => 'studying_1',
@@ -4298,8 +4298,8 @@ function dt_network_dashboard_register_action_zume_public_keys( $actions ){
 /**
  * READ LOG
  */
-add_filter( 'dt_network_dashboard_build_message', 'zume_public_log_actions', 10, 1 );
-function zume_public_log_actions( $activity_log ){
+add_filter( 'dt_network_dashboard_build_message', 'zume_ftt_public_log_actions', 10, 1 );
+function zume_ftt_public_log_actions( $activity_log ){
 
     foreach ( $activity_log as $index => $log ){
 

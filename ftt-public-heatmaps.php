@@ -1,16 +1,16 @@
 <?php
 /**
- * Plugin Name: Zume - Public Heatmaps
- * Plugin URI: https://github.com/ZumeProject/zume-public-heatmaps
+ * Plugin Name: Zume/FTT - Public Heatmaps
+ * Plugin URI: https://github.com/ZumeProject/ftt-public-heatmaps
  * Description: This plugin creates the public facing heatmaps that show trainings and churches and are embedded into public websites.
- * Text Domain: zume-public-heatmaps
+ * Text Domain: ftt-public-heatmaps
  * Domain Path: /languages
  * Version:  0.4
  * Author URI: https://github.com/ZumeProject
- * GitHub Plugin URI: https://github.com/ZumeProject/zume-public-heatmaps
+ * GitHub Plugin URI: https://github.com/ZumeProject/ftt-public-heatmaps
  * Requires at least: 4.7.0
  * (Requires 4.7+ because of the integration of the REST API at 4.7 and the security requirements of this milestone version.)
- * Tested up to: 5.6
+ * Tested up to: 6.2
  *
  * @package Disciple_Tools
  * @link    https://github.com/DiscipleTools
@@ -31,14 +31,14 @@ if ( ! defined( 'US_POPULATION_BLOCKS' ) ) {
 }
 
 /**
- * Gets the instance of the `Zume_Public_Heatmaps` class.
+ * Gets the instance of the `Zume_FTT_Public_Heatmaps` class.
  *
  * @since  0.1
  * @access public
  * @return object|bool
  */
-function zume_public_heatmaps() {
-    $zume_public_heatmaps_required_dt_theme_version = '1.0';
+function zume_ftt_public_heatmaps() {
+    $zume_ftt_public_heatmaps_required_dt_theme_version = '1.0';
     $wp_theme = wp_get_theme();
     $version = $wp_theme->version;
 
@@ -46,8 +46,8 @@ function zume_public_heatmaps() {
      * Check if the Disciple.Tools theme is loaded and is the latest required version
      */
     $is_theme_dt = strpos( $wp_theme->get_template(), "disciple-tools-theme" ) !== false || $wp_theme->name === "Disciple Tools";
-    if ( $is_theme_dt && version_compare( $version, $zume_public_heatmaps_required_dt_theme_version, "<" ) ) {
-        add_action( 'admin_notices', 'zume_public_heatmaps_hook_admin_notice' );
+    if ( $is_theme_dt && version_compare( $version, $zume_ftt_public_heatmaps_required_dt_theme_version, "<" ) ) {
+        add_action( 'admin_notices', 'zume_ftt_public_heatmaps_hook_admin_notice' );
         add_action( 'wp_ajax_dismissed_notice_handler', 'dt_hook_ajax_notice_handler' );
         return false;
     }
@@ -61,10 +61,10 @@ function zume_public_heatmaps() {
         require_once get_template_directory() . '/dt-core/global-functions.php';
     }
 
-    return Zume_Public_Heatmaps::instance();
+    return Zume_FTT_Public_Heatmaps::instance();
 
 }
-add_action( 'dt_network_dashboard_loaded', 'zume_public_heatmaps', 20 ); // hooks the network dashboard to load first
+add_action( 'dt_network_dashboard_loaded', 'zume_ftt_public_heatmaps', 20 ); // hooks the network dashboard to load first
 
 /**
  * Singleton class for setting up the plugin.
@@ -72,7 +72,7 @@ add_action( 'dt_network_dashboard_loaded', 'zume_public_heatmaps', 20 ); // hook
  * @since  0.1
  * @access public
  */
-class Zume_Public_Heatmaps {
+class Zume_FTT_Public_Heatmaps {
 
     private static $_instance = null;
     public static function instance() {
@@ -86,20 +86,7 @@ class Zume_Public_Heatmaps {
 
         require_once( 'magic/heatmap.php' );
         // polygon heat
-        require_once( 'magic/map-2-network-activities.php' );
-        require_once( 'magic/map-3-practitioners.php' );
-        require_once( 'magic/map-5-churches.php' );
         require_once( 'magic/map-6-churches-1000.php' );
-        // cluster heat
-        require_once( 'magic/cluster-1-last100.php' );
-        require_once( 'magic/cluster-2-all-time-activity.php' );
-        require_once( 'magic/cluster-3-trainings.php' );
-        require_once( 'magic/cluster-4-streams.php' );
-
-
-        require_once( 'magic/stats-1-trainees.php' );
-        require_once( 'magic/stats-2-churches.php' );
-
         require_once( 'charts/charts-loader.php' );
 
         if ( is_admin() ) {
@@ -122,7 +109,7 @@ class Zume_Public_Heatmaps {
             // You can still use `array_unshift()` to add links at the beginning.
 
             $links_array[] = '<a href="https://disciple.tools">Disciple.Tools Community</a>';
-            $links_array[] = '<a href="https://github.com/ZumeProject/zume-public-heatmaps">Github Project</a>';
+            $links_array[] = '<a href="https://github.com/ZumeProject/ftt-public-heatmaps">Github Project</a>';
         }
 
         return $links_array;
@@ -148,7 +135,7 @@ class Zume_Public_Heatmaps {
      */
     public static function deactivation() {
         // add functions here that need to happen on deactivation
-        delete_option( 'dismissed-zume-public-heatmaps' );
+        delete_option( 'dismissed-ftt-public-heatmaps' );
     }
 
     /**
@@ -159,7 +146,7 @@ class Zume_Public_Heatmaps {
      * @return void
      */
     public function i18n() {
-        $domain = 'zume-public-heatmaps';
+        $domain = 'ftt-public-heatmaps';
         load_plugin_textdomain( $domain, false, trailingslashit( dirname( plugin_basename( __FILE__ ) ) ). 'languages' );
     }
 
@@ -171,7 +158,7 @@ class Zume_Public_Heatmaps {
      * @return string
      */
     public function __toString() {
-        return 'zume-public-heatmaps';
+        return 'ftt-public-heatmaps';
     }
 
     /**
@@ -206,7 +193,7 @@ class Zume_Public_Heatmaps {
      * @access public
      */
     public function __call( $method = '', $args = array() ) {
-        _doing_it_wrong( "zume_public_heatmaps::" . esc_html( $method ), 'Method does not exist.', '0.1' );
+        _doing_it_wrong( "zume_ftt_public_heatmaps::" . esc_html( $method ), 'Method does not exist.', '0.1' );
         unset( $method, $args );
         return null;
     }
@@ -214,32 +201,32 @@ class Zume_Public_Heatmaps {
 
 
 // Register activation hook.
-register_activation_hook( __FILE__, [ 'Zume_Public_Heatmaps', 'activation' ] );
-register_deactivation_hook( __FILE__, [ 'Zume_Public_Heatmaps', 'deactivation' ] );
+register_activation_hook( __FILE__, [ 'Zume_FTT_Public_Heatmaps', 'activation' ] );
+register_deactivation_hook( __FILE__, [ 'Zume_FTT_Public_Heatmaps', 'deactivation' ] );
 
 
-if ( ! function_exists( 'zume_public_heatmaps_hook_admin_notice' ) ) {
-    function zume_public_heatmaps_hook_admin_notice() {
-        global $zume_public_heatmaps_required_dt_theme_version;
+if ( ! function_exists( 'zume_ftt_public_heatmaps_hook_admin_notice' ) ) {
+    function zume_ftt_public_heatmaps_hook_admin_notice() {
+        global $zume_ftt_public_heatmaps_required_dt_theme_version;
         $wp_theme = wp_get_theme();
         $current_version = $wp_theme->version;
         $message = "'Zume - Public Heatmaps' plugin requires 'Disciple Tools' theme to work. Please activate 'Disciple Tools' theme or make sure it is latest version.";
         if ( $wp_theme->get_template() === "disciple-tools-theme" ){
-            $message .= ' ' . sprintf( esc_html( 'Current Disciple Tools version: %1$s, required version: %2$s' ), esc_html( $current_version ), esc_html( $zume_public_heatmaps_required_dt_theme_version ) );
+            $message .= ' ' . sprintf( esc_html( 'Current Disciple Tools version: %1$s, required version: %2$s' ), esc_html( $current_version ), esc_html( $zume_ftt_public_heatmaps_required_dt_theme_version ) );
         }
         // Check if it's been dismissed...
-        if ( ! get_option( 'dismissed-zume-public-heatmaps', false ) ) { ?>
-            <div class="notice notice-error notice-zume-public-heatmaps is-dismissible" data-notice="zume-public-heatmaps">
+        if ( ! get_option( 'dismissed-ftt-public-heatmaps', false ) ) { ?>
+            <div class="notice notice-error notice-ftt-public-heatmaps is-dismissible" data-notice="ftt-public-heatmaps">
                 <p><?php echo esc_html( $message );?></p>
             </div>
             <script>
                 jQuery(function($) {
-                    $( document ).on( 'click', '.notice-zume-public-heatmaps .notice-dismiss', function () {
+                    $( document ).on( 'click', '.notice-ftt-public-heatmaps .notice-dismiss', function () {
                         $.ajax( ajaxurl, {
                             type: 'POST',
                             data: {
                                 action: 'dismissed_notice_handler',
-                                type: 'zume-public-heatmaps',
+                                type: 'ftt-public-heatmaps',
                                 security: '<?php echo esc_html( wp_create_nonce( 'wp_rest_dismiss' ) ) ?>'
                             }
                         })
@@ -273,9 +260,9 @@ add_action( 'plugins_loaded', function (){
         }
         if ( class_exists( 'Puc_v4_Factory' ) ){
             Puc_v4_Factory::buildUpdateChecker(
-                'https://raw.githubusercontent.com/DiscipleTools/zume-public-heatmaps/master/version-control.json',
+                'https://raw.githubusercontent.com/DiscipleTools/ftt-public-heatmaps/master/version-control.json',
                 __FILE__,
-                'zume-public-heatmaps'
+                'ftt-public-heatmaps'
             );
         }
     }

@@ -1,4 +1,4 @@
-![Plugin Banner](https://raw.githubusercontent.com/ZumeProject/zume-public-heatmaps/master/documentation/banner.png)
+![Plugin Banner](https://raw.githubusercontent.com/ZumeProject/ftt-public-heatmaps/master/documentation/banner.png)
 
 # Zúme - Public Heatmap
 
@@ -29,11 +29,11 @@ Expand Disciple Tools' ability to communicate progress and collect progress from
 ## Contribution
 
 Contributions welcome. You can report issues and bugs in the
-[Issues](https://github.com/ZumeProject/zume-public-heatmaps/issues) section of the repo. You can present ideas
-in the [Discussions](https://github.com/ZumeProject/zume-public-heatmaps/discussions) section of the repo. And
-code contributions are welcome using the [Pull Request](https://github.com/ZumeProject/zume-public-heatmaps/pulls)
+[Issues](https://github.com/ZumeProject/ftt-public-heatmaps/issues) section of the repo. You can present ideas
+in the [Discussions](https://github.com/ZumeProject/ftt-public-heatmaps/discussions) section of the repo. And
+code contributions are welcome using the [Pull Request](https://github.com/ZumeProject/ftt-public-heatmaps/pulls)
 system for git. For a more details on contribution see the
-[contribution guidelines](https://github.com/ZumeProject/zume-public-heatmaps/blob/master/CONTRIBUTING.md).
+[contribution guidelines](https://github.com/ZumeProject/ftt-public-heatmaps/blob/master/CONTRIBUTING.md).
 
 
 ## Screenshots

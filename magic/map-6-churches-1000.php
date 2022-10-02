@@ -2,10 +2,10 @@
 if ( !defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly.
 
 if ( strpos( dt_get_url_path(), 'zume_app' ) !== false || dt_is_rest() ){
-    Zume_Public_Heatmap_Churches_1000::instance();
+    Zume_FTT_Public_Heatmap_Churches_1000::instance();
 }
 
-class Zume_Public_Heatmap_Churches_1000 extends DT_Magic_Url_Base
+class Zume_FTT_Public_Heatmap_Churches_1000 extends DT_Magic_Url_Base
 {
     public $page_title = 'Zúme Churches Map';
     public $root = "zume_app";

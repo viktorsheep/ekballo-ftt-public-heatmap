@@ -1,4 +1,4 @@
-![Plugin Banner](https://raw.githubusercontent.com/ZumeProject/ftt-public-heatmaps/master/documentation/banner.png)
+
 
 # Zúme - Public Heatmap
 

@@ -392,21 +392,21 @@ function load_map() {
                 load_level_content( data, 'world' )
               })
 
-            let ac = $('#activity-content')
-            ac.html('<span class="loading-spinner active"></span>')
-            window.get_activity_data(e.features[0].properties.grid_id)
-              .done(function(data){
-                ac.empty()
-                if ( data.length < 1 ) {
-                  ac.append(`<div>No Movement Activity</div>`)
-                } else {
-                  $.each(data, function(i,v){
-                    if ( typeof v.message !== 'undefined' ){
-                      ac.append(`<div><div style="float:left;width:180px;"><strong>${v.formatted_time}</strong></div> <span>${v.message}</span></div>`)
-                    }
-                  })
-                }
-              })
+            // let ac = $('#activity-content')
+            // ac.html('<span class="loading-spinner active"></span>')
+            // window.get_activity_data(e.features[0].properties.grid_id)
+            //   .done(function(data){
+            //     ac.empty()
+            //     if ( data.length < 1 ) {
+            //       ac.append(`<div>No Movement Activity</div>`)
+            //     } else {
+            //       $.each(data, function(i,v){
+            //         if ( typeof v.message !== 'undefined' ){
+            //           ac.append(`<div><div style="float:left;width:180px;"><strong>${v.formatted_time}</strong></div> <span>${v.message}</span></div>`)
+            //         }
+            //       })
+            //     }
+            //   })
 
             $('#offCanvasNestedPush').foundation('toggle', e);
           });

@@ -13,8 +13,7 @@ class Zume_FTT_Public_Heatmap_Churches_1000 extends DT_Magic_Url_Base
     public $type_name = '';
     public $post_type = 'groups';
     private $meta_key = '';
-    public $us_div = 500; // goal for
-    public $global_div = 500; // this equals 2 for every 50000
+    public $global_div = 1000;
 
     private static $_instance = null;
     public static function instance() {
@@ -29,6 +28,7 @@ class Zume_FTT_Public_Heatmap_Churches_1000 extends DT_Magic_Url_Base
         parent::__construct();
 
         add_action( 'rest_api_init', [ $this, 'add_endpoints' ] );
+        add_action( 'dt_post_created', [ $this, 'clear_group_cache' ] );
 
 
         // fail if not valid url
@@ -78,6 +78,12 @@ class Zume_FTT_Public_Heatmap_Churches_1000 extends DT_Magic_Url_Base
         include( 'heatmap.html' );
     }
 
+    public function clear_group_cache( $post_id ){
+        if ( $this->post_type === get_post_type( $post_id ) ){
+            Zume_App_Heatmap::clear_church_grid_totals();
+        }
+    }
+
     public function footer_javascript(){
         ?>
         <script>
@@ -100,14 +106,13 @@ class Zume_FTT_Public_Heatmap_Churches_1000 extends DT_Magic_Url_Base
 
             /* custom content */
             function load_self_content( data ) {
-                let pop_div = data.population_division_int * 2
                 jQuery('#custom-paragraph').html(`
                   <span class="self_name ucwords temp-spinner bold">${data.name}</span> is one of <span class="self_peers  bold">${data.peers}</span>
                   administrative divisions in <span class="parent_name ucwords bold">${data.parent_name}</span> and it has a population of
                   <span class="self_population  bold">${data.population}</span>.
-                  In order to reach the community goal of 1 church for every <span class="population_division  bold">${pop_div.toLocaleString("en-US")}</span> people,
+                  In order to reach the community goal of 1 church for every <span class="population_division  bold">${data.population_division}</span> people,
                   <span class="self_name ucwords  bold">${data.name}</span> needs
-                  <span class="self_needed bold">${data.needed / 2}</span> new churches.
+                  <span class="self_needed bold">${data.needed}</span> new churches.
                 `)
             }
             /* custom level content */
@@ -119,7 +124,7 @@ class Zume_FTT_Public_Heatmap_Churches_1000 extends DT_Magic_Url_Base
                         <div class="cell">
                           <strong>${data.name}</strong><br>
                           Population: <span>${data.population}</span><br>
-                          Churches Needed: <span>${(data.needed.toString().replace(/,/g, '') / 2).toLocaleString('en-US')}</span><br>
+                          Churches Needed: <span>${data.needed}</span><br>
                           Churches Reported: <span class="reported_number">${data.reported}</span><br>
                           Goal Reached: <span>${data.percent}</span>%
                           <meter class="meter" value="${data.percent}" min="0" low="33" high="66" optimum="100" max="100"></meter>
@@ -196,24 +201,77 @@ class Zume_FTT_Public_Heatmap_Churches_1000 extends DT_Magic_Url_Base
 
         switch ( $action ) {
             case 'self':
-                return Zume_App_Heatmap::get_self( $params['grid_id'], $this->global_div, $this->us_div );
+                return Zume_App_Heatmap::get_self( $params['grid_id'], $this->global_div);
             case 'a3':
             case 'a2':
             case 'a1':
             case 'a0':
             case 'world':
-                $list = Zume_App_Heatmap::query_church_grid_totals( $action );
-                return Zume_App_Heatmap::endpoint_get_level( $params['grid_id'], $action, $list, $this->global_div, $this->us_div );
+                $list = Zume_App_Heatmap::query_church_grid_totals( $action, $params['grid_id'] );
+                return Zume_App_Heatmap::endpoint_get_level( $params['grid_id'], $action, $list, $this->global_div );
             case 'activity_data':
-                $grid_id = sanitize_text_field( wp_unslash( $params['grid_id'] ) );
-                $offset = sanitize_text_field( wp_unslash( $params['offset'] ) );
-                return Zume_App_Heatmap::query_activity_data( $grid_id, $offset );
+                return [];
             case 'grid_data':
-                $grid_totals = Zume_App_Heatmap::query_church_grid_totals();
-                return Zume_App_Heatmap::_initial_polygon_value_list( $grid_totals, $this->global_div, $this->us_div );
+                return $this->get_grid_data();
             default:
                 return new WP_Error( __METHOD__, "Missing valid action", [ 'status' => 400 ] );
         }
+    }
+
+    public function get_grid_data() {
+
+        $grid_totals = Zume_App_Heatmap::query_church_grid_totals();
+        $flat_grid = Zume_App_Heatmap::query_saturation_list();
+
+        $data = [];
+        $highest_value = 1;
+        foreach ( $flat_grid as $v ){
+            $data[$v['grid_id']] = [
+                'grid_id' => $v['grid_id'],
+                'population' => number_format_i18n( $v['population'] ),
+                'needed' => 1,
+                'reported' => 0,
+                'percent' => 0,
+            ];
+
+            $needed = round( $v['population'] / $this->global_div );
+            if ( $needed < 1 ){
+                $needed = 1;
+            }
+
+            if ( isset( $grid_totals[$v['grid_id']] ) && ! empty( $grid_totals[$v['grid_id']] ) ){
+                $reported = $grid_totals[$v['grid_id']];
+
+                if ( ! empty( $reported ) && ! empty( $needed ) ){
+                    $data[$v['grid_id']]['needed'] = $needed;
+
+                    $data[$v['grid_id']]['reported'] = $reported;
+                    $percent = ceil( $reported / $needed * 100 );
+                    if ( 100 < $percent ) {
+                        $percent = 100;
+                    } else {
+                        $percent = number_format_i18n( $percent, 2 );
+                    }
+
+                    $data[$v['grid_id']]['percent'] = $percent;
+                }
+            }
+            else {
+                $data[$v['grid_id']]['percent'] = 0;
+                $data[$v['grid_id']]['reported'] = 0;
+                $data[$v['grid_id']]['needed'] = $needed;
+            }
+
+            if ( $highest_value < $data[$v['grid_id']]['reported'] ){
+                $highest_value = $data[$v['grid_id']]['reported'];
+            }
+        }
+
+        return [
+            'highest_value' => (int) $highest_value,
+            'data' => $data,
+            'count' => count( $data ),
+        ];
     }
 
 }

@@ -23,11 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'GLOBAL_POPULATION_BLOCKS' ) ) {
-    define( 'GLOBAL_POPULATION_BLOCKS', 50000 );
-}
-
-if ( ! defined( 'US_POPULATION_BLOCKS' ) ) {
-    define( 'US_POPULATION_BLOCKS', 5000 );
+    define( 'GLOBAL_POPULATION_BLOCKS', 1000 );
 }
 
 /**
@@ -64,7 +60,7 @@ function zume_ftt_public_heatmaps() {
     return Zume_FTT_Public_Heatmaps::instance();
 
 }
-add_action( 'dt_network_dashboard_loaded', 'zume_ftt_public_heatmaps', 20 ); // hooks the network dashboard to load first
+add_action( 'after_setup_theme', 'zume_ftt_public_heatmaps', 20 ); // hooks the network dashboard to load first
 
 /**
  * Singleton class for setting up the plugin.
@@ -85,8 +81,7 @@ class Zume_FTT_Public_Heatmaps {
     private function __construct() {
 
         require_once( 'magic/heatmap.php' );
-        // polygon heat
-        require_once( 'magic/map-6-churches-1000.php' );
+        require_once( 'magic/churches.php' );
         require_once( 'charts/charts-loader.php' );
 
         if ( is_admin() ) {

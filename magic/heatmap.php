@@ -1044,7 +1044,7 @@ class Zume_App_Heatmap {
 
     public static function query_church_grid_totals( $administrative_level = null, $grid_id = 0 ) {
 
-        if ( false !== ( $value = get_transient( __METHOD__ . $administrative_level ) ) ) { // phpcs:ignore
+        if ( 0 !== $grid_id && false !== ( $value = get_transient( __METHOD__ . $administrative_level ) ) ) { // phpcs:ignore
             return $value;
         }
 

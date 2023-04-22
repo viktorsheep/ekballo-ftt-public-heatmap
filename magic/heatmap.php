@@ -98,15 +98,15 @@ class Zume_App_Heatmap {
         return $list;
     }
 
-    public static function query_flat_grid_by_level( $administrative_level, $global_div = 1000, $grid_id = null ) {
+    public static function query_flat_grid_by_level( $administrative_level, $global_div = 1000, $grid_id = 0, $grid_array = [] ) {
 
-        if ( false !== ( $value = get_transient( __METHOD__ . $administrative_level . $global_div ) ) ) { // phpcs:ignore
+        if ( 0 === $grid_id && false !== ( $value = get_transient( __METHOD__ . $administrative_level . $global_div ) ) ) { // phpcs:ignore
             return $value;
         }
 
         global $wpdb;
         $wpdb->global_div = $global_div;
-        $wpdb->grid_id = $grid_id;
+
         switch ( $administrative_level ) {
             case 'a0':
                 $results = $wpdb->get_results("
@@ -293,6 +293,8 @@ class Zume_App_Heatmap {
                 ", ARRAY_A );
                 break;
             case 'a2':
+                $grid_array = self::query_grid_elements( $grid_id);
+                $wpdb->grid_id = $grid_array['a2'];
                 $results = $wpdb->get_results("
 
                     SELECT tb2.admin2_grid_id as grid_id, loc.name, loc.country_code, SUM(tb2.population) as population, SUM(tb2.needed) as needed, (0) as reported, (0) as percent
@@ -386,6 +388,9 @@ class Zume_App_Heatmap {
                 ", ARRAY_A );
                 break;
             case 'a3':
+                $grid_array = self::query_grid_elements( $grid_id);
+                $wpdb->grid_id = $grid_array['a3'];
+                $wpdb->grid_id = $grid_id;
                 $results = $wpdb->get_results("
                     SELECT tb3.admin3_grid_id as grid_id, loc.name, loc.country_code, SUM(tb3.population) as population, SUM(tb3.needed) as needed, (0) as reported, (0) as percent
                     FROM (
@@ -1044,13 +1049,12 @@ class Zume_App_Heatmap {
 
     public static function query_church_grid_totals( $administrative_level = null, $grid_id = 0 ) {
 
-        if ( 0 !== $grid_id && false !== ( $value = get_transient( __METHOD__ . $administrative_level ) ) ) { // phpcs:ignore
+        if ( 0 === $grid_id && false !== ( $value = get_transient( __METHOD__ . $administrative_level ) ) ) { // phpcs:ignore
             return $value;
         }
 
         global $wpdb;
 
-        $wpdb->grid_id = $grid_id;
 
         switch ( $administrative_level ) {
             case 'a0':
@@ -1078,6 +1082,9 @@ class Zume_App_Heatmap {
                     ", ARRAY_A );
                 break;
             case 'a2':
+                $grid_array = self::query_grid_elements( $grid_id);
+                $wpdb->grid_id = $grid_array['a3'];
+                $wpdb->grid_id = $grid_id;
                 $results = $wpdb->get_results( "
                     SELECT t2.admin2_grid_id as grid_id, count(t2.admin2_grid_id) as count
                     FROM (
@@ -1091,6 +1098,9 @@ class Zume_App_Heatmap {
                     ", ARRAY_A );
                 break;
             case 'a3':
+                $grid_array = self::query_grid_elements( $grid_id);
+                $wpdb->grid_id = $grid_array['a3'];
+                $wpdb->grid_id = $grid_id;
                 $results = $wpdb->get_results( "
                     SELECT t3.admin3_grid_id as grid_id, count(t3.admin3_grid_id) as count
                     FROM (
@@ -1429,7 +1439,7 @@ class Zume_App_Heatmap {
         // add levels
         $grid = Zume_App_Heatmap::query_grid_elements( $grid_id );
 
-        $flat_grid = self::query_flat_grid_by_level( $administrative_level, $global_div, $grid_id );
+        $flat_grid = self::query_flat_grid_by_level( $administrative_level, $global_div, $grid_id, $grid );
         $flat_grid_limited = self::_limit_counts( $flat_grid, $list ); // limit counts to no larger than needed per location.
 
 

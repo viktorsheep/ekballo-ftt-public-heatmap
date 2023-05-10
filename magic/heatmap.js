@@ -85,8 +85,8 @@ jQuery(document).ready(function($){
             height: ${window.innerHeight-60}px !important;
         }
         .off-canvas.position-right {
-            width:${slider_width}px;
-            background-color:white;
+          width: 25%;
+          background-color:white;
         }
         #initialize-screen {
             height: ${window.innerHeight-60}px !important;
@@ -309,10 +309,17 @@ function load_map() {
             'paint': {
               'fill-color': {
                 property: 'value',
-                stops: [[0, 'rgba(0, 0, 0, 0)'], [0.01, 'rgb(50,205,50)'], [jsObject.grid_data.highest_value, 'rgb(0,128,0)']]
+                stops: [
+                  [0, '#ffffff'],
+                  [20, '#ba1200'],
+                  [40, '#cc441c'],
+                  [60, '#f7c162'],
+                  [80, '#78945f'],
+                  [100, '#4a7c59']
+                ]
               },
               'fill-opacity': 0.75,
-              'fill-outline-color': '#006400'
+              'fill-outline-color': '#777777'
             }
           })
           /**********/

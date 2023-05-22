@@ -50,55 +50,54 @@ jQuery(document).ready(function($){
 
   /* set vertical size the form column*/
   $('#custom-style').empty().append(`
-        #wrapper {
-            height: ${window.innerHeight}px !important;
-        }
-        #map-wrapper {
-            height: ${window.innerHeight}px !important;
-        }
-        #map {
-            height: ${window.innerHeight}px !important;
-        }
-        .off-canvas.position-right {
-            width:${slider_width}px;
-            background-color:white;
-        }
-        #initialize-screen {
-            height: ${window.innerHeight}px !important;
-        }
-        #welcome-modal {
-            height: ${window.innerHeight - 30}px !important;
-        }
-        #map-sidebar-wrapper {
-            height: ${window.innerHeight}px !important;
-        }
+    #wrapper {
+      height: ${window.innerHeight}px !important;
+    }
+    #map-wrapper {
+      height: ${window.innerHeight}px !important;
+    }
+    #map {
+      height: ${window.innerHeight}px !important;
+    }
+    .off-canvas.position-right {
+      width: 25%;
+      background-color:white;
+    }
+    #initialize-screen {
+      height: ${window.innerHeight}px !important;
+    }
+    #welcome-modal {
+      height: ${window.innerHeight - 30}px !important;
+    }
+    #map-sidebar-wrapper {
+      height: ${window.innerHeight}px !important;
+    }
+  `)
 
-    `)
   $('#custom-style-portal').empty().append(`
-        #wrapper {
-            height: ${window.innerHeight-60}px !important;
-        }
-        #map-wrapper {
-            height: ${window.innerHeight-60}px !important;
-        }
-        #map {
-            height: ${window.innerHeight-60}px !important;
-        }
-        .off-canvas.position-right {
-          width: 25%;
-          background-color:white;
-        }
-        #initialize-screen {
-            height: ${window.innerHeight-60}px !important;
-        }
-        #welcome-modal {
-            height: ${window.innerHeight - 30}px !important;
-        }
-        #map-sidebar-wrapper {
-            height: ${window.innerHeight-60}px !important;
-        }
-
-    `)
+    #wrapper {
+      height: ${window.innerHeight-60}px !important;
+    }
+    #map-wrapper {
+      height: ${window.innerHeight-60}px !important;
+    }
+    #map {
+      height: ${window.innerHeight-60}px !important;
+    }
+    .off-canvas.position-right {
+      width: 25%;
+      background-color:white;
+    }
+    #initialize-screen {
+      height: ${window.innerHeight-60}px !important;
+    }
+    #welcome-modal {
+      height: ${window.innerHeight - 30}px !important;
+    }
+    #map-sidebar-wrapper {
+      height: ${window.innerHeight-60}px !important;
+    }
+  `)
 
   let initialize_screen = jQuery('.initialize-progress')
 

@@ -260,13 +260,7 @@ class Zume_FTT_Public_Heatmap_Churches_1000 extends DT_Magic_Url_Base
                     $data[$v['grid_id']]['needed'] = $needed;
 
                     $data[$v['grid_id']]['reported'] = $reported;
-                    $percent = ceil($reported / $needed * 100);
-                    if (100 < $percent) {
-                        $percent = 100;
-                    } else {
-                        $percent = number_format_i18n($percent, 2);
-                    }
-
+                    $percent = number_format_i18n($reported / $needed * 100, 2);
                     $data[$v['grid_id']]['percent'] = $percent;
                 }
             } else {

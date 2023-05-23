@@ -1,7 +1,10 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly
+if (!defined('ABSPATH')) {
+    exit;
+} // Exit if accessed directly
 
-class Zume_App_Heatmap {
+class Zume_App_Heatmap
+{
 
 
     /**
@@ -12,9 +15,10 @@ class Zume_App_Heatmap {
      *
      * @return array
      */
-    public static function query_saturation_list() : array {
+    public static function query_saturation_list(): array
+    {
 
-        if ( false !== ( $value = get_transient( __METHOD__ ) ) ) { // phpcs:ignore
+        if (false !== ($value = get_transient(__METHOD__))) { // phpcs:ignore
             return $value;
         }
 
@@ -91,23 +95,24 @@ class Zume_App_Heatmap {
 
 			# Total Records (44395)
 
-       ", ARRAY_A );
+       ", ARRAY_A);
 
-        set_transient( __METHOD__, $list, MONTH_IN_SECONDS );
+        set_transient(__METHOD__, $list, MONTH_IN_SECONDS);
 
         return $list;
     }
 
-    public static function query_flat_grid_by_level( $administrative_level, $global_div = 1000, $grid_id = 0, $grid_array = [] ) {
+    public static function query_flat_grid_by_level($administrative_level, $global_div = 1000, $grid_id = 0, $grid_array = [])
+    {
 
-        if ( 0 === $grid_id && false !== ( $value = get_transient( __METHOD__ . $administrative_level . $global_div ) ) ) { // phpcs:ignore
+        if (0 === $grid_id && false !== ($value = get_transient(__METHOD__ . $administrative_level . $global_div))) { // phpcs:ignore
             return $value;
         }
 
         global $wpdb;
         $wpdb->global_div = $global_div;
 
-        switch ( $administrative_level ) {
+        switch ($administrative_level) {
             case 'a0':
                 $results = $wpdb->get_results("
                     SELECT tb0.admin0_grid_id as grid_id, loc.name,loc.country_code, SUM(tb0.population) as population, SUM(tb0.needed) as needed, (0) as reported, (0) as percent
@@ -197,7 +202,7 @@ class Zume_App_Heatmap {
                     ) as tb0
                     LEFT JOIN $wpdb->dt_location_grid loc ON tb0.admin0_grid_id=loc.grid_id
                     GROUP BY tb0.admin0_grid_id
-                ", ARRAY_A );
+                ", ARRAY_A);
                 break;
             case 'a1':
                 $results = $wpdb->get_results("
@@ -290,10 +295,10 @@ class Zume_App_Heatmap {
                     ) as tb1
                     LEFT JOIN $wpdb->dt_location_grid loc ON tb1.admin1_grid_id=loc.grid_id
                     GROUP BY tb1.admin1_grid_id
-                ", ARRAY_A );
+                ", ARRAY_A);
                 break;
             case 'a2':
-                $grid_array = self::query_grid_elements( $grid_id);
+                $grid_array = self::query_grid_elements($grid_id);
                 $wpdb->grid_id = $grid_array['a2'];
                 $results = $wpdb->get_results("
 
@@ -385,10 +390,10 @@ class Zume_App_Heatmap {
                     LEFT JOIN $wpdb->dt_location_grid loc ON tb2.admin2_grid_id=loc.grid_id
                     WHERE tb2.admin2_grid_id = $wpdb->grid_id
                     GROUP BY tb2.admin2_grid_id
-                ", ARRAY_A );
+                ", ARRAY_A);
                 break;
             case 'a3':
-                $grid_array = self::query_grid_elements( $grid_id);
+                $grid_array = self::query_grid_elements($grid_id);
                 $wpdb->grid_id = $grid_array['a3'];
                 $wpdb->grid_id = $grid_id;
                 $results = $wpdb->get_results("
@@ -480,7 +485,7 @@ class Zume_App_Heatmap {
                     LEFT JOIN $wpdb->dt_location_grid loc ON tb3.admin3_grid_id=loc.grid_id
                     WHERE tb3.admin3_grid_id IS NOT NULL AND tb3.admin3_grid_id = $wpdb->grid_id
                     GROUP BY tb3.admin3_grid_id
-                ", ARRAY_A );
+                ", ARRAY_A);
                 break;
             case 'world':
                 $results = $wpdb->get_results("
@@ -571,7 +576,7 @@ class Zume_App_Heatmap {
                     ) as tbw
                     LEFT JOIN $wpdb->dt_location_grid loc ON 1=loc.grid_id
                     GROUP BY 'World';
-                ", ARRAY_A );
+                ", ARRAY_A);
                 break;
             default:
                 $results = $wpdb->get_results("
@@ -1023,42 +1028,44 @@ class Zume_App_Heatmap {
                     ) as tbw
                     LEFT JOIN $wpdb->dt_location_grid loc ON 1=loc.grid_id
                     GROUP BY 'World';
-                ", ARRAY_A );
+                ", ARRAY_A);
         }
 
-        if ( empty( $results ) ) {
+        if (empty($results)) {
             return [];
         }
 
-        set_transient( __METHOD__ . $administrative_level . $global_div, $results, MONTH_IN_SECONDS );
+        set_transient(__METHOD__ . $administrative_level . $global_div, $results, MONTH_IN_SECONDS);
 
         return $results;
     }
 
 
-    public static function clear_church_grid_totals() {
-        delete_transient( 'Zume_App_Heatmap::query_church_grid_totals' );
-        delete_transient( 'Zume_App_Heatmap::query_church_grid_totalsa0' );
-        delete_transient( 'Zume_App_Heatmap::query_church_grid_totalsa1' );
-        delete_transient( 'Zume_App_Heatmap::query_church_grid_totalsa2' );
-        delete_transient( 'Zume_App_Heatmap::query_church_grid_totalsa3' );
-        delete_transient( 'Zume_App_Heatmap::query_church_grid_totalsa4' );
-        delete_transient( 'Zume_App_Heatmap::query_church_grid_totalsworld' );
-        delete_transient( 'Zume_App_Heatmap::query_church_grid_totalsfull' );
+    public static function clear_church_grid_totals()
+    {
+        delete_transient('Zume_App_Heatmap::query_church_grid_totals');
+        delete_transient('Zume_App_Heatmap::query_church_grid_totalsa0');
+        delete_transient('Zume_App_Heatmap::query_church_grid_totalsa1');
+        delete_transient('Zume_App_Heatmap::query_church_grid_totalsa2');
+        delete_transient('Zume_App_Heatmap::query_church_grid_totalsa3');
+        delete_transient('Zume_App_Heatmap::query_church_grid_totalsa4');
+        delete_transient('Zume_App_Heatmap::query_church_grid_totalsworld');
+        delete_transient('Zume_App_Heatmap::query_church_grid_totalsfull');
     }
 
-    public static function query_church_grid_totals( $administrative_level = null, $grid_id = 0 ) {
+    public static function query_church_grid_totals($administrative_level = null, $grid_id = 0)
+    {
 
-        if ( 0 === $grid_id && false !== ( $value = get_transient( __METHOD__ . $administrative_level ) ) ) { // phpcs:ignore
+        if (0 === $grid_id && false !== ($value = get_transient(__METHOD__ . $administrative_level))) { // phpcs:ignore
             return $value;
         }
 
         global $wpdb;
 
 
-        switch ( $administrative_level ) {
+        switch ($administrative_level) {
             case 'a0':
-                $results = $wpdb->get_results( "
+                $results = $wpdb->get_results("
                     SELECT t0.admin0_grid_id as grid_id, count(t0.admin0_grid_id) as count
                     FROM (
                      SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id, lg.admin4_grid_id, lg.admin5_grid_id
@@ -1067,10 +1074,10 @@ class Zume_App_Heatmap {
                         WHERE lgm.post_type = 'groups'
                     ) as t0
                     GROUP BY t0.admin0_grid_id
-                    ", ARRAY_A );
+                    ", ARRAY_A);
                 break;
             case 'a1':
-                $results = $wpdb->get_results( "
+                $results = $wpdb->get_results("
                     SELECT t1.admin1_grid_id as grid_id, count(t1.admin1_grid_id) as count
                     FROM (
                         SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id, lg.admin4_grid_id, lg.admin5_grid_id
@@ -1079,13 +1086,13 @@ class Zume_App_Heatmap {
                         WHERE lgm.post_type = 'groups'
                     ) as t1
                     GROUP BY t1.admin1_grid_id
-                    ", ARRAY_A );
+                    ", ARRAY_A);
                 break;
             case 'a2':
-                $grid_array = self::query_grid_elements( $grid_id);
+                $grid_array = self::query_grid_elements($grid_id);
                 $wpdb->grid_id = $grid_array['a3'];
                 $wpdb->grid_id = $grid_id;
-                $results = $wpdb->get_results( "
+                $results = $wpdb->get_results("
                     SELECT t2.admin2_grid_id as grid_id, count(t2.admin2_grid_id) as count
                     FROM (
                         SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id, lg.admin4_grid_id, lg.admin5_grid_id
@@ -1095,13 +1102,13 @@ class Zume_App_Heatmap {
                     ) as t2
                     WHERE t2.admin2_grid_id = $wpdb->grid_id
                     GROUP BY t2.admin2_grid_id
-                    ", ARRAY_A );
+                    ", ARRAY_A);
                 break;
             case 'a3':
-                $grid_array = self::query_grid_elements( $grid_id);
+                $grid_array = self::query_grid_elements($grid_id);
                 $wpdb->grid_id = $grid_array['a3'];
                 $wpdb->grid_id = $grid_id;
-                $results = $wpdb->get_results( "
+                $results = $wpdb->get_results("
                     SELECT t3.admin3_grid_id as grid_id, count(t3.admin3_grid_id) as count
                     FROM (
                         SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id, lg.admin4_grid_id, lg.admin5_grid_id
@@ -1111,10 +1118,10 @@ class Zume_App_Heatmap {
                     ) as t3
                     WHERE t3.admin3_grid_id = $wpdb->grid_id
                     GROUP BY t3.admin3_grid_id
-                    ", ARRAY_A );
+                    ", ARRAY_A);
                 break;
             case 'world':
-                $results = $wpdb->get_results( "
+                $results = $wpdb->get_results("
                     SELECT 1 as grid_id, count('World') as count
                     FROM (
                              SELECT 'World'
@@ -1123,10 +1130,10 @@ class Zume_App_Heatmap {
                                 WHERE lgm.post_type = 'groups'
                          ) as tw
                     GROUP BY 'World'
-                    ", ARRAY_A );
+                    ", ARRAY_A);
                 break;
             case 'full': // full query including world
-                $results = $wpdb->get_results( "
+                $results = $wpdb->get_results("
                     SELECT t0.admin0_grid_id as grid_id, count(t0.admin0_grid_id) as count
                     FROM (
                      SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id, lg.admin4_grid_id, lg.admin5_grid_id
@@ -1171,10 +1178,10 @@ class Zume_App_Heatmap {
                         WHERE lgm.post_type = 'groups'
                          ) as tw
                     GROUP BY 'World'
-                    ", ARRAY_A );
+                    ", ARRAY_A);
                 break;
             default:
-                $results = $wpdb->get_results( "
+                $results = $wpdb->get_results("
                         SELECT t0.admin0_grid_id as grid_id, count(t0.admin0_grid_id) as count
                         FROM (
                          SELECT lg.admin0_grid_id, lg.admin1_grid_id, lg.admin2_grid_id, lg.admin3_grid_id, lg.admin4_grid_id, lg.admin5_grid_id
@@ -1210,32 +1217,33 @@ class Zume_App_Heatmap {
                             WHERE lgm.post_type = 'groups'
                         ) as t3
                         GROUP BY t3.admin3_grid_id
-                        ", ARRAY_A );
+                        ", ARRAY_A);
                 break;
         }
 
         $list = [];
-        if ( is_array( $results ) ) {
-            foreach ( $results as $result ) {
-                if ( empty( $result['grid_id'] ) ) {
+        if (is_array($results)) {
+            foreach ($results as $result) {
+                if (empty($result['grid_id'])) {
                     continue;
                 }
-                if ( empty( $result['count'] ) ) {
+                if (empty($result['count'])) {
                     continue;
                 }
                 $list[$result['grid_id']] = $result['count'];
             }
         }
 
-        set_transient( __METHOD__ . $administrative_level, $list, HOUR_IN_SECONDS );
+        set_transient(__METHOD__ . $administrative_level, $list, HOUR_IN_SECONDS);
 
         return $list;
     }
 
-    public static function query_grid_elements( $grid_id ) {
+    public static function query_grid_elements($grid_id)
+    {
         global $wpdb;
 
-        $result = $wpdb->get_row($wpdb->prepare( "
+        $result = $wpdb->get_row($wpdb->prepare("
             SELECT
                    lg.admin3_grid_id as a3,
                    lg.admin2_grid_id as a2,
@@ -1255,7 +1263,7 @@ class Zume_App_Heatmap {
             LEFT JOIN $wpdb->dt_location_grid lg3 ON lg.admin3_grid_id=lg3.grid_id
             LEFT JOIN $wpdb->dt_location_grid lgw ON 1=lgw.grid_id
             WHERE lg.grid_id = %s
-        ", $grid_id ), ARRAY_A );
+        ", $grid_id), ARRAY_A);
 
         return $result;
     }
@@ -1263,9 +1271,10 @@ class Zume_App_Heatmap {
     /**
      * Shared heatmap functions
      */
-    public static function _header(){
-        ?>
-        <link rel="dns-prefetch" href="https://storage.googleapis.com/" >
+    public static function _header()
+    {
+?>
+        <link rel="dns-prefetch" href="https://storage.googleapis.com/">
         <link rel="prefetch" href="https://storage.googleapis.com/location-grid-mirror-v2/tiles/world/saturation/1.geojson">
         <link rel="prefetch" href="https://storage.googleapis.com/location-grid-mirror-v2/tiles/world/saturation/2.geojson">
         <link rel="prefetch" href="https://storage.googleapis.com/location-grid-mirror-v2/tiles/world/saturation/3.geojson">
@@ -1313,11 +1322,11 @@ class Zume_App_Heatmap {
         <link rel="prefetch" href="https://storage.googleapis.com/location-grid-mirror-v2/tiles/world/saturation/45.geojson">
         <style>
             #initialize-screen {
-                background-image: url("<?php echo esc_url( plugin_dir_url( __FILE__ ) ) ?>/images/initialize-background.jpg");
-                background-size:cover;
+                background-image: url("<?php echo esc_url(plugin_dir_url(__FILE__)) ?>/images/initialize-background.jpg");
+                background-size: cover;
             }
         </style>
-        <?php
+<?php
         wp_head();
     }
 
@@ -1325,51 +1334,51 @@ class Zume_App_Heatmap {
      * Grid list build initial map list of elements and drives sidebar
      * @return array
      */
-    public static function _initial_polygon_value_list( $grid_totals, $global_div, $us_div ){
+    public static function _initial_polygon_value_list($grid_totals, $global_div, $us_div)
+    {
         $flat_grid = self::query_saturation_list();
 
         $data = [];
         $highest_value = 1;
-        foreach ( $flat_grid as $i => $v ){
+        foreach ($flat_grid as $i => $v) {
             $data[$i] = [
                 'grid_id' => $i,
-                'population' => number_format_i18n( $v['population'] ),
+                'population' => number_format_i18n($v['population']),
                 'needed' => 1,
                 'reported' => 0,
                 'percent' => 0,
             ];
 
-            $population_division = self::_get_population_division( $v['country_code'], $global_div, $us_div );
+            $population_division = self::_get_population_division($v['country_code'], $global_div, $us_div);
 
-            $needed = round( $v['population'] / $population_division );
-            if ( $needed < 1 ){
+            $needed = round($v['population'] / $population_division);
+            if ($needed < 1) {
                 $needed = 1;
             }
 
-            if ( isset( $grid_totals[$v['grid_id']] ) && ! empty( $grid_totals[$v['grid_id']] ) ){
+            if (isset($grid_totals[$v['grid_id']]) && !empty($grid_totals[$v['grid_id']])) {
                 $reported = $grid_totals[$v['grid_id']];
 
-                if ( ! empty( $reported ) && ! empty( $needed ) ){
+                if (!empty($reported) && !empty($needed)) {
                     $data[$v['grid_id']]['needed'] = $needed;
 
                     $data[$v['grid_id']]['reported'] = $reported;
-                    $percent = ceil( $reported / $needed * 100 );
-                    if ( 100 < $percent ) {
+                    $percent = ceil($reported / $needed * 100);
+                    if (100 < $percent) {
                         $percent = 100;
                     } else {
-                        $percent = number_format_i18n( $percent, 2 );
+                        $percent = number_format_i18n($percent, 2);
                     }
 
                     $data[$v['grid_id']]['percent'] = $percent;
                 }
-            }
-            else {
+            } else {
                 $data[$v['grid_id']]['percent'] = 0;
                 $data[$v['grid_id']]['reported'] = 0;
                 $data[$v['grid_id']]['needed'] = $needed;
             }
 
-            if ( $highest_value < $data[$v['grid_id']]['reported'] ){
+            if ($highest_value < $data[$v['grid_id']]['reported']) {
                 $highest_value = $data[$v['grid_id']]['reported'];
             }
         }
@@ -1380,30 +1389,37 @@ class Zume_App_Heatmap {
         ];
     }
 
-    public static function _wp_enqueue_scripts(){
-        wp_enqueue_script( 'lodash' );
-        wp_enqueue_script( 'jquery-ui' );
-        wp_enqueue_script( 'jquery-touch-punch' );
+    public static function _wp_enqueue_scripts()
+    {
+        wp_enqueue_script('lodash');
+        wp_enqueue_script('jquery-ui');
+        wp_enqueue_script('jquery-touch-punch');
 
-        wp_enqueue_script( 'heatmap-js', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'heatmap.js', [
+        wp_enqueue_script('heatmap-js', trailingslashit(plugin_dir_url(__FILE__)) . 'heatmap.js', [
             'jquery',
             'mapbox-cookie',
             'jquery-cookie'
-        ], filemtime( plugin_dir_path( __FILE__ ) .'heatmap.js' ), true );
+        ], filemtime(plugin_dir_path(__FILE__) . 'heatmap.js'), true);
 
-        wp_enqueue_style( 'heatmap-css', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'heatmap.css', [], filemtime( plugin_dir_path( __FILE__ ) .'heatmap.css' ) );
+        wp_enqueue_style('heatmap-css', trailingslashit(plugin_dir_url(__FILE__)) . 'heatmap.css', [], filemtime(plugin_dir_path(__FILE__) . 'heatmap.css'));
 
-        wp_enqueue_script( 'jquery-cookie', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'js.cookie.min.js', [ 'jquery' ],
-        filemtime( trailingslashit( plugin_dir_path( __FILE__ ) ) .'js.cookie.min.js' ), true );
+        wp_enqueue_script(
+            'jquery-cookie',
+            trailingslashit(plugin_dir_url(__FILE__)) . 'js.cookie.min.js',
+            ['jquery'],
+            filemtime(trailingslashit(plugin_dir_path(__FILE__)) . 'js.cookie.min.js'),
+            true
+        );
 
-        wp_enqueue_script( 'mapbox-cookie', trailingslashit( get_stylesheet_directory_uri() ) . 'dt-mapping/geocode-api/mapbox-cookie.js', [ 'jquery', 'jquery-cookie' ], '3.0.0' );
+        wp_enqueue_script('mapbox-cookie', trailingslashit(get_stylesheet_directory_uri()) . 'dt-mapping/geocode-api/mapbox-cookie.js', ['jquery', 'jquery-cookie'], '3.0.0');
     }
 
-    public static function get_self( $grid_id, $global_div ) {
+    public static function get_self($grid_id, $global_div)
+    {
         global $wpdb;
 
         // get grid elements for design
-        $grid = $wpdb->get_row( $wpdb->prepare( "
+        $grid = $wpdb->get_row($wpdb->prepare("
             SELECT
               g.grid_id,
               g.level,
@@ -1416,48 +1432,43 @@ class Zume_App_Heatmap {
             FROM $wpdb->dt_location_grid as g
             LEFT JOIN $wpdb->dt_location_grid as gn ON g.parent_id=gn.grid_id
             WHERE g.grid_id = %s
-        ", $global_div, $global_div, $grid_id ), ARRAY_A );
+        ", $global_div, $global_div, $grid_id), ARRAY_A);
 
         // set array
         $population_division = $global_div;
         $data = [
             'level' => $grid['level'],
             'parent_level' => $grid['level'] - 1, // one level higher than current
-            'population_division' => number_format_i18n( $population_division ), // label for content not calculation
+            'population_division' => number_format_i18n($population_division), // label for content not calculation
             'population_division_int' => $population_division, // label for content not calculation
             'name' => $grid['name'],
             'parent_name' => $grid['parent_name'],
-            'peers' => number_format_i18n( $grid['peers'] ),
-            'population' => number_format_i18n( $grid['population'] ),
-            'needed' => number_format_i18n( $grid['needed'] ),
+            'peers' => number_format_i18n($grid['peers']),
+            'population' => number_format_i18n($grid['population']),
+            'needed' => number_format_i18n($grid['needed']),
         ];
 
         return $data;
     }
 
-    public static function endpoint_get_level( $grid_id, $administrative_level, $list, $global_div ) {
+    public static function endpoint_get_level($grid_id, $administrative_level, $list, $global_div)
+    {
         // add levels
-        $grid = Zume_App_Heatmap::query_grid_elements( $grid_id );
+        $grid = Zume_App_Heatmap::query_grid_elements($grid_id);
 
-        $flat_grid = self::query_flat_grid_by_level( $administrative_level, $global_div, $grid_id, $grid );
-        $flat_grid_limited = self::_limit_counts( $flat_grid, $list ); // limit counts to no larger than needed per location.
+        $flat_grid = self::query_flat_grid_by_level($administrative_level, $global_div, $grid_id, $grid);
+        $flat_grid_limited = self::_limit_counts($flat_grid, $list); // limit counts to no larger than needed per location.
 
 
-        if ( isset( $flat_grid_limited[$grid[$administrative_level]] ) && ! empty( $flat_grid_limited[$grid[$administrative_level]] ) ) {
+        if (isset($flat_grid_limited[$grid[$administrative_level]]) && !empty($flat_grid_limited[$grid[$administrative_level]])) {
             $level = $flat_grid_limited[$grid[$administrative_level]];
-        }
-        else {
+        } else {
             return false;
         }
 
-        $percent = $level['reported'] / $level['needed'] * 100;
-        if ( 100 < $percent ) {
-            $percent = 100;
-        } else {
-            $percent = number_format_i18n( $percent, 2 );
-        }
+        $percent = number_format_i18n($level['reported'] / $level['needed'] * 100, 2);
 
-        if ( isset( $flat_grid[$grid[$administrative_level]] ) && ! empty( $flat_grid[$grid[$administrative_level]] ) ) {
+        if (isset($flat_grid[$grid[$administrative_level]]) && !empty($flat_grid[$grid[$administrative_level]])) {
             $raw_level = $flat_grid[$grid[$administrative_level]];
             $raw_reported = $raw_level['reported'];
         } else {
@@ -1467,31 +1478,33 @@ class Zume_App_Heatmap {
         /**
          * @todo temp cover for populations
          */
-        if ( isset( $grid[$administrative_level . '_population'] )
-            && ! empty( $grid[$administrative_level . '_population'] )
-            && in_array( $administrative_level, [ 'a0', 'world' ] ) ) {
+        if (
+            isset($grid[$administrative_level . '_population'])
+            && !empty($grid[$administrative_level . '_population'])
+            && in_array($administrative_level, ['a0', 'world'])
+        ) {
             $level['population'] = $grid[$administrative_level . '_population'];
 
             $population_division = $global_div;
-            $needed = round( $level['population'] / $population_division );
-            if ( $needed < 1 ){
+            $needed = round($level['population'] / $population_division);
+            if ($needed < 1) {
                 $needed = 1;
             }
             $level['needed'] = (int) $needed;
         }
         // @todo end temp cover for populations
 
-        if ( empty( $level['name'] ) ) {
+        if (empty($level['name'])) {
             return false;
         }
 
         $data = [
             'name' => $level['name'],
             'grid_id' => (int) $level['grid_id'],
-            'population' => number_format_i18n( $level['population'] ),
-            'needed' => number_format_i18n( $level['needed'] ),
-            'reported' => number_format_i18n( $raw_reported ),
-            'percent' => number_format_i18n( $percent, 2 ),
+            'population' => number_format_i18n($level['population']),
+            'needed' => number_format_i18n($level['needed']),
+            'reported' => number_format_i18n($raw_reported),
+            'percent' => number_format_i18n($percent, 2),
         ];
 
         return $data;
@@ -1503,23 +1516,13 @@ class Zume_App_Heatmap {
      * @param $list
      * @return array
      */
-    public static function _limit_counts( $flat_grid, $list ) {
+    public static function _limit_counts($flat_grid, $list)
+    {
         $flat_grid_limited = [];
-        foreach ( $flat_grid as $value ) {
+        foreach ($flat_grid as $value) {
             $flat_grid_limited[$value['grid_id']] = $value;
-
-            if ( isset( $list[$value['grid_id']] ) && ! empty( $list[$value['grid_id']] ) ) {
-                if ( $list[$value['grid_id']] <= $value['needed'] ) {
-                    $flat_grid_limited[$value['grid_id']]['reported'] = $list[$value['grid_id']];
-                } else {
-                    $flat_grid_limited[$value['grid_id']]['reported'] = $value['needed'];
-                }
-            }
+            $flat_grid_limited[$value['grid_id']]['reported'] = $list[$value['grid_id']];
         }
         return $flat_grid_limited;
     }
-
-
-
 }
-

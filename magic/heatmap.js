@@ -60,7 +60,7 @@ jQuery(document).ready(function($){
       height: ${window.innerHeight}px !important;
     }
     .off-canvas.position-right {
-      width: 25%;
+      width: ${ window.innerWidth < 1360 ? '100%' : '25%' };
       background-color:white;
     }
     #initialize-screen {

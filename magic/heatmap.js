@@ -258,7 +258,7 @@ function load_map() {
 
           jQuery.each(geojson.features, function (i, v) {
             if (typeof jsObject.grid_data.data[v.id] !== 'undefined' ) {
-              let percentage = Number(jsObject.grid_data.data[e.features[0].properties.grid_id].percent.toString().replaceAll(',', ''))
+              let percentage = Number(jsObject.grid_data.data[v.id].percent.toString().replaceAll(',', ''))
               geojson.features[i].properties.value = percentage > 100 ? 100 : percentage
             } else {
               geojson.features[i].properties.value = 0

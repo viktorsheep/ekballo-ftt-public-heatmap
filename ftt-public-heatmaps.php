@@ -6,7 +6,7 @@
  * Description: This plugin creates the public facing heatmaps that show trainings and churches and are embedded into public websites.
  * Text Domain: ekballo-ftt-public-heatmaps
  * Domain Path: /languages
- * Version:  0.5.3
+ * Version:  0.5.4
  * Author URI: https://github.com/viktorsheep
  * GitHub Plugin URI: https://github.com/viktorsheep/ekballo-ftt-public-heatmaps
  * Requires at least: 4.7.0

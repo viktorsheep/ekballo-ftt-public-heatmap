@@ -258,7 +258,8 @@ function load_map() {
 
           jQuery.each(geojson.features, function (i, v) {
             if (typeof jsObject.grid_data.data[v.id] !== 'undefined' ) {
-              geojson.features[i].properties.value = parseInt(jsObject.grid_data.data[v.id].percent)
+              let percentage = Number(jsObject.grid_data.data[e.features[0].properties.grid_id].percent.toString().replaceAll(',', ''))
+              geojson.features[i].properties.value = percentage > 100 ? 100 : percentage
             } else {
               geojson.features[i].properties.value = 0
             }
@@ -351,9 +352,12 @@ function load_map() {
                 window.previous_hover,
                 {hover: true}
               );
+
+              let percentage = Number(jsObject.grid_data.data[e.features[0].properties.grid_id].percent.toString().replaceAll(',', ''))
+
               $('#title').html(e.features[0].properties.full_name)
-              $('#meter').val(jsObject.grid_data.data[e.features[0].properties.grid_id].percent)
-              $('#saturation-goal').html(jsObject.grid_data.data[e.features[0].properties.grid_id].percent)
+              $('#meter').val(percentage)
+              $('#saturation-goal').html(percentage.toLocaleString())
               $('#population').html(jsObject.grid_data.data[e.features[0].properties.grid_id].population)
 
               //report
